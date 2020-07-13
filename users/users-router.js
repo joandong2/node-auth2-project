@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Users = require("./users-model");
 const restrict = require("../middleware/restrict");
+const jwtDecode = require("jwt-decode");
 
 const router = express.Router();
 
@@ -49,10 +50,12 @@ router.post("/api/login", async (req, res, next) => {
             });
         }
 
+        console.log(user);
+
         const payload = {
             userId: user.id,
             username: user.username,
-            // userRole: "admin", // this value would usually come from the database
+            department: user.department,
         };
 
         // send the token back as a cookie so the client automatically stores it
@@ -68,7 +71,12 @@ router.post("/api/login", async (req, res, next) => {
 
 router.get("/api/users", restrict(), async (req, res, next) => {
     try {
-        res.json(await Users.find());
+        //console.log(jwtDecode(req.cookies.token).department);
+        res.json(
+            await Users.findBy({
+                department: jwtDecode(req.cookies.token).department,
+            })
+        );
     } catch (err) {
         next(err);
     }
