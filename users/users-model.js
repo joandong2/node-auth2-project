@@ -22,9 +22,16 @@ function findById(id) {
         .first();
 }
 
+function findByDept(dept) {
+    return db("users")
+        .select("id", "username", "department")
+        .where({ department: dept });
+}
+
 module.exports = {
     add,
     find,
     findBy,
     findById,
+    findByDept,
 };

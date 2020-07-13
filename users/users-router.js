@@ -73,9 +73,7 @@ router.get("/api/users", restrict(), async (req, res, next) => {
     try {
         //console.log(jwtDecode(req.cookies.token).department);
         res.json(
-            await Users.findBy({
-                department: jwtDecode(req.cookies.token).department,
-            })
+            await Users.findByDept(jwtDecode(req.cookies.token).department)
         );
     } catch (err) {
         next(err);
