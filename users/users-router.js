@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/api/register", async (req, res, next) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, department } = req.body;
         const user = await Users.findBy({ username }).first();
 
         if (user) {
@@ -22,6 +22,7 @@ router.post("/api/register", async (req, res, next) => {
             username,
             // hash the password with a time complexity of "14"
             password: await bcrypt.hash(password, 14),
+            department,
         });
 
         res.status(201).json(newUser);
